@@ -1,5 +1,6 @@
 from scipy.io import loadmat
 import numpy as np
+import time
 
 TEST_VARS = loadmat('/Users/beni/PycharmProjects/PlumeScripts/PlumeScripts/testfile.mat')
 
@@ -15,7 +16,8 @@ def test_var(var, var_str, dec=2):
     test_var = TEST_VARS[var_str]
     if isinstance(var, (float, int)):
         test_var = test_var[0]
-    print(test_var, var)
+    print('test: {}\nvar: {}'.format(test_var, var))
+    time.sleep(0.1)
     np.testing.assert_array_almost_equal(test_var, var, decimal=dec)
     raise Exception('Test passed')
 
