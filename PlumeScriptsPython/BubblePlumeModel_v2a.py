@@ -404,10 +404,6 @@ for d1 in range(startingd1, numsamples_1d):
                                           np.abs([Gprime_ud[ii + 1], lastgprime])),
                                       np.abs(F_ud[ii + 1] - lastf) / max(np.abs([F_ud[ii + 1], lastf]))])
 
-                        if
-                        test_var(misfit, 'misfit', 4)
-
-
                         # Break from loop:
                         if misfit < tolerance and numiterations >= miniterations:
                             done_gridcell = 1
@@ -427,28 +423,32 @@ for d1 in range(startingd1, numsamples_1d):
                             W_ud[ii + 1] = lastw + (1 - damping) * (W_ud[ii + 1] - lastw)
                             Gprime_ud[ii + 1] = lastgprime + (1 - damping) * (Gprime_ud[ii + 1] - lastgprime)
                             F_ud[ii + 1] = lastf + (1 - damping) * (F_ud[ii + 1] - lastf)
-                            # Record last guess:
-                            lastw = W_ud[ii + 1]
-                            lastb = B_ud[ii + 1]
-                            lastgprime = Gprime_ud[ii + 1]
-                            lastf = F_ud[ii + 1]
+                            # Record last guess (MUST COPY IN PYTHON):
+                            lastw = W_ud[ii + 1].copy()
+                            lastb = B_ud[ii + 1].copy()
+                            lastgprime = Gprime_ud[ii + 1].copy()
+                            lastf = F_ud[ii + 1].copy()
+                    # Check if plume terminated:
+                    if hasterminated:
+                        break
 
-                # Check if plume terminated:
-                if hasterminated:
-                    break
+                    # if ii == 0:
+                    #     test_var(SinTheta_ud, 'SinTheta_ud', 4)
+                    #     test_var(Velocity_ud, 'Velocity_ud', 4)
 
-# Compute output variables:
-if ii > 2:
-    # NutrientFlux(d1,d2,d3,d4)=NutrientFlux_ud(ii)Depth_ud(ii+1)-.5*B_ud(ii+1)*SinTheta_ud(ii+1)
-    NutrientFlux[d1, d2, d3, d4] = NutrientFlux_ud[ii] * max(0, min(1, (
-                nearsurfacedepth - (Depth_ud[ii] - .5 * B_ud[ii] * SinTheta_ud[ii])) / (B_ud[ii] * SinTheta_ud[ii])))
-    FinalWidth[d1, d2, d3, d4] = B_ud[ii]
-    MinVelocityRatio[d1, d2, d3, d4] = min(W_ud[1:ii]/ Ws_ud[1:ii])
-    Theta_ud = np.rad2deg(np.sin(SinTheta_ud))
-    InitialAngle[d1, d2, d3, d4] = Theta_ud[1]
-    FinalAngle[d1, d2, d3, d4] = Theta_ud[ii]
-    MeanAngle[d1, d2, d3, d4] = mean(Theta_ud[1:ii])
-    DownstreamDistance[d1, d2, d3, d4] = X_ud[ii]
+                # Compute output variables:
+                if ii > 1:
+                    # NutrientFlux(d1,d2,d3,d4)=NutrientFlux_ud(ii)Depth_ud(ii+1)-.5*B_ud(ii+1)*SinTheta_ud(ii+1)
+                    NutrientFlux[d1, d2, d3, d4] = NutrientFlux_ud[ii] * max(0, min(1, (
+                                nearsurfacedepth - (Depth_ud[ii] - .5 * B_ud[ii] * SinTheta_ud[ii])) / (B_ud[ii] * SinTheta_ud[ii])))
+                    FinalWidth[d1, d2, d3, d4] = B_ud[ii]
+                    MinVelocityRatio[d1, d2, d3, d4] = min(W_ud[1:ii]/ Ws_ud[1:ii])
+                    Theta_ud = np.rad2deg(np.arcsin(SinTheta_ud))
+                    InitialAngle[d1, d2, d3, d4] = Theta_ud[1]
+                    FinalAngle[d1, d2, d3, d4] = Theta_ud[ii]
+                    MeanAngle[d1, d2, d3, d4] = np.mean(Theta_ud[1:ii])
+                    DownstreamDistance[d1, d2, d3, d4] = X_ud[ii]
+                    test_var(Velocity_ud, 'Velocity_ud', 4)
 
 
 # Save output:
