@@ -164,10 +164,10 @@ for ii in range(ssize):
     Velocity_ud[ii + 1] = Velocity_ud[ii]
     
     # Record guesses:
-    lastw = W_ud[ii + 1]
-    lastb = B_ud[ii + 1]
-    lastgprime = Gprime_ud[ii + 1]
-    lastf = F_ud[ii + 1]
+    lastw = W_ud[ii + 1].copy()
+    lastb = B_ud[ii + 1].copy()
+    lastgprime = Gprime_ud[ii + 1].copy()
+    lastf = F_ud[ii + 1].copy()
     
     # Compute this damping coefficient:
     damping = finaldamping + (initialdamping - finaldamping) * np.exp(-ii / efoldingcells)
@@ -275,10 +275,10 @@ for ii in range(ssize):
             Gprime_ud[ii + 1] = lastgprime + (1 - damping) * (Gprime_ud[ii + 1] - lastgprime)
             F_ud[ii + 1] = lastf + (1 - damping) * (F_ud[ii + 1] - lastf)
             # Record last guess:
-            lastw = W_ud[ii + 1]
-            lastb = B_ud[ii + 1]
-            lastgprime = Gprime_ud[ii + 1]
-            lastf = F_ud[ii + 1]
+            lastw = W_ud[ii + 1].copy()
+            lastb = B_ud[ii + 1].copy()
+            lastgprime = Gprime_ud[ii + 1].copy()
+            lastf = F_ud[ii + 1].copy()
 
     # Check if plume terminated:
     if hasterminated:

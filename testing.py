@@ -13,8 +13,9 @@ def test_var(var, var_str, dec=2):
     :param dec: decimal precision
     :return: Raises an exception even if it passes to stop the code.
     """
+    # tv = TEST_VARS
     test_var = TEST_VARS[var_str]
-    if isinstance(var, (float, int)):
+    if isinstance(var, (float, int)) or test_var.size == 1:
         test_var = test_var[0]
     print('test: {}\nvar: {}'.format(test_var, var))
     time.sleep(0.1)

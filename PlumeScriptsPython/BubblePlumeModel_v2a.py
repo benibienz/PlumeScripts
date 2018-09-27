@@ -161,10 +161,10 @@ else:
     continueold = 0
 
     # Set starting d1:
-    startingd1 = 1
+    startingd1 = 0
     
-    # Create parameter space grids:
-    SourceDepth = np.linspace(sourcedepthlims[0], sourcedepthlims[1], numsamples_1d)
+    # Create parameter space grids (this requires some dimensional reshaping for python):
+    SourceDepth = np.linspace(sourcedepthlims[0], sourcedepthlims[1], numsamples_1d)[:, None]
     FlowRate = np.linspace(flowratelims[0], flowratelims[1], numsamples_1d)
     Nsquared = np.exp(
         np.transpose(np.linspace(np.log(nsquaredlims[0]), np.log(nsquaredlims[1]), numsamples_1d)[None, :, None],
@@ -182,11 +182,9 @@ else:
     FinalAngle = np.zeros((numsamples_1d, numsamples_1d, numsamples_1d, numsamples_1d))
     MeanAngle = np.zeros((numsamples_1d, numsamples_1d, numsamples_1d, numsamples_1d))
     DownstreamDistance = np.zeros((numsamples_1d, numsamples_1d, numsamples_1d, numsamples_1d))
-    # print(SourceDepth[None, :].shape)
-    # print(FlowRate.shape)
-    # print(np.matlib.repmat(SourceDepth[None, :].T, 1, numsamples_1d)[:, 0])
+
     # Compute pump power:
-    PumpPower = rho_m * g * np.matlib.repmat(SourceDepth[None, :].T, 1, numsamples_1d) * np.matlib.repmat(FlowRate, numsamples_1d, 1)
+    PumpPower = rho_m * g * np.matlib.repmat(SourceDepth, 1, numsamples_1d) * np.matlib.repmat(FlowRate, numsamples_1d, 1)
 
 # Pre-allocate plume model grids:
 X_ud = np.zeros((ssize + 1, 1))
@@ -239,10 +237,10 @@ for d1 in range(startingd1, numsamples_1d):
             for d4 in range(numsamples_1d):
 
                 # Compute density gradient:
-                rhograd = rho_m * Nsquared[d3] / g
+                rhograd = rho_m * Nsquared[0, 0, d3] / g
 
                 # Compute shear:
-                shear = np.sqrt(Nsquared[d3] / ri)
+                shear = np.sqrt(Nsquared[0, 0, d3] / ri)
 
                 # Compute average density:
                 rhobar = rho_m + (.5 * rhograd * (SourceDepth[d1] - dp)) * (SourceDepth[d1] - dp) / SourceDepth[d1]
@@ -257,7 +255,7 @@ for d1 in range(startingd1, numsamples_1d):
                 wguess = (buoyancyrate / (2 * alpha)) ** (1 / 3)
 
                 # Define along-plume coordinate:
-                S_ud = np.linspace(0, SourceDepth[d1] * sfactor, ssize + 1)
+                S_ud = np.linspace(0, SourceDepth[d1] * sfactor, ssize + 1)[:, None]
 
                 # Compute ds:
                 ds = S_ud[1] - S_ud[0]
@@ -277,14 +275,14 @@ for d1 in range(startingd1, numsamples_1d):
                 # ambient variables:
                 Rho_a_ud[0] = rho_m + rhograd * (SourceDepth[d1] - dp)
                 Gprime_a_ud[0] = 0
-                U_a_ud[0] = max(0, Um[d4] - shear * (SourceDepth[d1] - dp))
+                U_a_ud[0] = max(0, Um[0, 0, 0, d4] - shear * (SourceDepth[d1] - dp))
                 NutrientConcentration_a_ud[0] = gamma * (SourceDepth[d1] - dp)
 
                 # model (water) variables:
                 B_ud[0] = 2 * alpha * ds
                 W_ud[0] = wguess
                 Gprime_ud[0] = 0
-                Velocity_ud[0] = sqrt(W_ud[0] ** 2 + U_a_ud[0] ** 2)
+                Velocity_ud[0] = np.sqrt(W_ud[0] ** 2 + U_a_ud[0] ** 2)
 
                 # trig terms:
                 SinTheta_ud[0] = U_a_ud[0] / Velocity_ud[0]
@@ -303,14 +301,14 @@ for d1 in range(startingd1, numsamples_1d):
                     Gprime_ud[ii + 1] = Gprime_ud[ii]
                     F_ud[ii + 1] = F_ud[ii]
                     Depth_ud[ii + 1] = Depth_ud[ii] - ds * W_ud[ii] / Velocity_ud[ii]
-                    U_a_ud[ii + 1] = max(0, Um[d4] - shear * max(0, Depth_ud[ii + 1] - dp))
+                    U_a_ud[ii + 1] = max(0, Um[0, 0, 0, d4] - shear * max(0, Depth_ud[ii + 1] - dp))
                     Velocity_ud[ii + 1] = Velocity_ud[ii]
 
-                    # Record guesses:
-                    lastw = W_ud[ii + 1]
-                    lastb = B_ud[ii + 1]
-                    lastgprime = Gprime_ud[ii + 1]
-                    lastf = F_ud[ii + 1]
+                    # Record guesses (Note: must make copies in python!):
+                    lastw = W_ud[ii + 1].copy()
+                    lastb = B_ud[ii + 1].copy()
+                    lastgprime = Gprime_ud[ii + 1].copy()
+                    lastf = F_ud[ii + 1].copy()
 
                     # Compute this damping coefficient:
                     damping = finaldamping + (initialdamping - finaldamping) * np.exp(-ii / efoldingcells)
@@ -338,16 +336,16 @@ for d1 in range(startingd1, numsamples_1d):
                         # Define ambient profiles:
                         Rho_a_ud[ii + 1] = rho_m + rhograd * max(0, Depth_ud[ii + 1] - dp)
                         Gprime_a_ud[ii + 1] = g * (rho_s - Rho_a_ud[ii + 1]) / rho_s
-                        U_a_ud[ii + 1] = max(0, Um[d4] - shear * max(0, Depth_ud[ii + 1] - dp))
+                        U_a_ud[ii + 1] = max(0, Um[0, 0, 0, d4] - shear * max(0, Depth_ud[ii + 1] - dp))
                         NutrientConcentration_a_ud[ii + 1] = gamma * max(0, Depth_ud[ii + 1] - dp)
 
                         # Compute bubble radius:
                         BubbleRadius_ud[ii + 1] = r0 * ((SourceDepth[d1] + da) / (da + Depth_ud[ii + 1])) ** (1 / 3)
 
                         # Compute bubble slip velocity:
-                        ws_turb = sqrt(BubbleRadius_ud[ii + 1] * g)
+                        ws_turb = np.sqrt(BubbleRadius_ud[ii + 1] * g)
                         ws_lam = (BubbleRadius_ud[ii + 1] ** 2) * Rho_a_ud[ii + 1] * g / (3 * mu)
-                        Ws_ud[ii + 1] = 1 / sqrt(1 / ws_lam ** 2 + 1 / ws_turb ** 2)
+                        Ws_ud[ii + 1] = 1 / np.sqrt(1 / ws_lam ** 2 + 1 / ws_turb ** 2)
 
                         # Compute buoyancy of the plume:
                         buoyancy = F_ud[ii + 1] * g + (1 - F_ud[ii + 1]) * Gprime_ud[ii + 1] - Gprime_a_ud[ii + 1]
@@ -375,7 +373,7 @@ for d1 in range(startingd1, numsamples_1d):
 
                         # Advance primitive variables:
                         W_ud[ii + 1] = outmomentum / outflux
-                        Velocity_ud[ii + 1] = sqrt(U_a_ud[ii + 1] ** 2 + W_ud[ii + 1] ** 2)
+                        Velocity_ud[ii + 1] = np.sqrt(U_a_ud[ii + 1] ** 2 + W_ud[ii + 1] ** 2)
                         Gprime_ud[ii + 1] = outbuoyancy / outflux
                         B_ud[ii + 1] = outflux / (Velocity_ud[ii + 1] * (1 - F_ud[ii + 1]))
                         F_ud[ii + 1] = outairflux / (
@@ -398,12 +396,17 @@ for d1 in range(startingd1, numsamples_1d):
                         # Display current guess:
                         # disp(['b=',num2str(B_ud(ii+1)),', w=',num2str(W_ud(ii+1)),', gprime=',num2str(Gprime_ud(ii+1)),', F=',num2str(F_ud(ii+1))])
 
+
                         # Compute misfit:
-                        misfit = max([np.abs(B_ud[ii + 1] - lastb) / max(np.abs([B_ud[ii + 1], lastb])),
+                        misfit = np.nanmax([np.abs(B_ud[ii + 1] - lastb) / max(np.abs([B_ud[ii + 1], lastb])),
                                       np.abs(W_ud[ii + 1] - lastw) / max(np.abs([W_ud[ii + 1], lastw])),
                                       np.abs(Gprime_ud[ii + 1] - lastgprime) / max(
                                           np.abs([Gprime_ud[ii + 1], lastgprime])),
                                       np.abs(F_ud[ii + 1] - lastf) / max(np.abs([F_ud[ii + 1], lastf]))])
+
+                        if
+                        test_var(misfit, 'misfit', 4)
+
 
                         # Break from loop:
                         if misfit < tolerance and numiterations >= miniterations:
