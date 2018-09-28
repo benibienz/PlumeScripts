@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from testing import test_var
-import json
+import pickle
 
 
 """
@@ -56,8 +56,8 @@ grid cell.
 # Parameters:
 
 # File names:
-# inputfile='LinePlumeModel_ParamSpace_v2.json' # can be commented
-outputfile = 'LinePlumeModel_ParamSpace_v2.json'
+# inputfile='LinePlumeModel_ParamSpace_v2.p' # can be commented
+outputfile = 'LinePlumeModel_ParamSpace_v2.p'
 # figname = 'LinePlumeModel_ParamSpace_v2.png'
 
 # Constant Parameters:
@@ -92,7 +92,7 @@ initialdamping = .95  # unitless [0,1)
 finaldamping = .25  # unitless ]0,1)
 efoldingcells = 3  # unitless
 wsterminationfactor = 0  # unitless        THIS IS THE ONLY PARAMETER REMEMBERED IF YOU ARE LOADING AN INPUT FILE
-numsamples_1d = 30  # integer
+numsamples_1d = 2  # integer
 d1displayinterval = 1  # integer
 d2displayinterval = 10  # integer
 NumericParameters = {'ssize': ssize, 'sfactor': sfactor, 'tolerance': tolerance, 'miniterations': miniterations,
@@ -109,29 +109,30 @@ d3 = tratification
 d4 = horizontal flow rate
 """
 
-# Check whether to load partially completed file:
-# if exist('inputfile', 'var')
-# 
-#     # Flag:
-#     continueold = 1
-# 
-#     # Load old file:
-#     newwsfactor = wsterminationfactor
-#     load(inputfile)
-# 
-#     # Unpack parameter structures:
-#     unpack(ConstantParameters)
-#     unpack(VariableParameters)
-#     unpack(NumericParameters)
-# 
-#     # Override ws termination factor:
-#     wsterminationfactor = newwsfactor
-# 
-#     # Set starting d1:
-#     startingd1 = d1
-
 if 0:
     pass
+    """ This is probably not worth the hassle of implementing right now. Variables will be saved at the end of
+    the script. It doesn't take that long to run and does not need to be run often. """
+    # Check whether to load partially completed file:
+    # if exist('inputfile', 'var')
+    #
+    #     # Flag:
+    #     continueold = 1
+    #
+    #     # Load old file:
+    #     newwsfactor = wsterminationfactor
+    #     load(inputfile)
+    #
+    #     # Unpack parameter structures:
+    #     unpack(ConstantParameters)
+    #     unpack(VariableParameters)
+    #     unpack(NumericParameters)
+    #
+    #     # Override ws termination factor:
+    #     wsterminationfactor = newwsfactor
+    #
+    #     # Set starting d1:
+    #     startingd1 = d1
 else:
     # Flag:
     continueold = 0
@@ -190,10 +191,8 @@ gamma = 1 / (sourcedepthlims[1] - dp)
 for d1 in range(startingd1, numsamples_1d):
     for d2 in range(numsamples_1d):
         
-        # Communicate with the human:
-        # if (rem(d2, d2displayinterval) == 1 | | d2displayinterval == 1) & & (
-        #         rem(d1, d1displayinterval) == 1 | | d1displayinterval == 1)
-        #     disp(['d1=', num2str[d1], '/', num2str(numsamples_1d), ', d2=', num2str[d2], '/', num2str(numsamples_1d)])
+        # print info
+        # print(d1, d2)
 
         # Check if the flow rate is zero:
         if FlowRate[d2] == 0:
@@ -211,6 +210,7 @@ for d1 in range(startingd1, numsamples_1d):
         
         for d3 in range(numsamples_1d):
             for d4 in range(numsamples_1d):
+                print('d1: {}, d2: {}, d3: {}, d4: {}'.format(d1, d2, d3, d4))
 
                 # Compute density gradient:
                 rhograd = rho_m * Nsquared[0, 0, d3] / g
@@ -270,7 +270,6 @@ for d1 in range(startingd1, numsamples_1d):
                 # Loop through grid cells:
                 hasterminated = 0
                 for ii in range(ssize):
-
                     # Use forward Euler as the first guess:
                     B_ud[ii + 1] = B_ud[ii]
                     W_ud[ii + 1] = W_ud[ii]
@@ -385,7 +384,7 @@ for d1 in range(startingd1, numsamples_1d):
                             done_gridcell = 1
                         elif numiterations > maxiterations:
                             # Record failure to converge:
-                            Converge[d1, d2, d3, d4] = 0
+                            Converged[d1, d2, d3, d4] = 0
                             # Break from loops:
                             done_gridcell = 1
                             hasterminated = 1
@@ -424,17 +423,20 @@ for d1 in range(startingd1, numsamples_1d):
                     FinalAngle[d1, d2, d3, d4] = Theta_ud[ii]
                     MeanAngle[d1, d2, d3, d4] = np.mean(Theta_ud[1:ii])
                     DownstreamDistance[d1, d2, d3, d4] = X_ud[ii]
-                    test_var(Velocity_ud, 'Velocity_ud', 4)
 
+
+# test_var(NutrientFlux, 'NutrientFlux')
 
 # Save output:
 params = [ConstantParameters, VariableParameters, NumericParameters, SourceDepth, FlowRate, Nsquared, Um, Converged,
           ReachedSurface, NutrientFlux, FinalWidth, MinVelocityRatio, InitialAngle, FinalAngle, MeanAngle,
           DownstreamDistance, PumpPower, d1, d2, d3, d4]
-with open(outputfile, 'w') as f:
-    json.dump(params, f)
+with open(outputfile, 'wb') as f:
+    pickle.dump(params, f)
 
 # -------------------- PLOTS -----------------------------------------
+
+
 # Figure parameters:
 pagesize = [12, 12]  # [1x2] inches
 resolution = 300  # dpi
