@@ -461,16 +461,12 @@ fluxvartick = .5  # 10^3 m^3/s
 cmap = 'parula'  # valid colormap string
 numcontours = 30  # integer
 
-# figure[0]
 #
 # # Set colormap:
 # colormap(cmap)
 #
-# # Call first subplot:
-# subplot('Position', Boxes
-# {1, 1})
-# # Plot pump power:
-# contourf(FlowRate, SourceDepth, PumpPower / 1000, linspace(powerlims[0], powerlims[1], numcontours))
+# Plot pump power:
+contourf(FlowRate, SourceDepth, PumpPower / 1000, linspace(powerlims[0], powerlims[1], numcontours))
 # # Set up stuff:
 # caxis(powerlims)
 # set(gca, 'ydir', 'reverse')
