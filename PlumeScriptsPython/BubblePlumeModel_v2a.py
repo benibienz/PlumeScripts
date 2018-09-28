@@ -56,7 +56,8 @@ grid cell.
 # Parameters:
 
 # File names:
-# inputfile='LinePlumeModel_ParamSpace_v2.p' # can be commented
+# inputfile = None
+inputfile = 'LinePlumeModel_ParamSpace_v2.p'  # uncomment for plot only
 outputfile = 'LinePlumeModel_ParamSpace_v2.p'
 # figname = 'LinePlumeModel_ParamSpace_v2.png'
 
@@ -189,10 +190,9 @@ gamma = 1 / (sourcedepthlims[1] - dp)
 # Run Model:
 # Loop through parameter space:
 for d1 in range(startingd1, numsamples_1d):
+    if inputfile is not None:
+        break
     for d2 in range(numsamples_1d):
-        
-        # print info
-        # print(d1, d2)
 
         # Check if the flow rate is zero:
         if FlowRate[d2] == 0:
@@ -371,7 +371,6 @@ for d1 in range(startingd1, numsamples_1d):
                         # Display current guess:
                         # disp(['b=',num2str(B_ud(ii+1)),', w=',num2str(W_ud(ii+1)),', gprime=',num2str(Gprime_ud(ii+1)),', F=',num2str(F_ud(ii+1))])
 
-
                         # Compute misfit:
                         misfit = np.nanmax([np.abs(B_ud[ii + 1] - lastb) / max(np.abs([B_ud[ii + 1], lastb])),
                                       np.abs(W_ud[ii + 1] - lastw) / max(np.abs([W_ud[ii + 1], lastw])),
@@ -407,10 +406,6 @@ for d1 in range(startingd1, numsamples_1d):
                     if hasterminated:
                         break
 
-                    # if ii == 0:
-                    #     test_var(SinTheta_ud, 'SinTheta_ud', 4)
-                    #     test_var(Velocity_ud, 'Velocity_ud', 4)
-
                 # Compute output variables:
                 if ii > 1:
                     # NutrientFlux(d1,d2,d3,d4)=NutrientFlux_ud(ii)Depth_ud(ii+1)-.5*B_ud(ii+1)*SinTheta_ud(ii+1)
@@ -424,18 +419,21 @@ for d1 in range(startingd1, numsamples_1d):
                     MeanAngle[d1, d2, d3, d4] = np.mean(Theta_ud[1:ii])
                     DownstreamDistance[d1, d2, d3, d4] = X_ud[ii]
 
+    # Save output:
+    params = [ConstantParameters, VariableParameters, NumericParameters, SourceDepth, FlowRate, Nsquared, Um, Converged,
+              ReachedSurface, NutrientFlux, FinalWidth, MinVelocityRatio, InitialAngle, FinalAngle, MeanAngle,
+              DownstreamDistance, PumpPower, d1, d2, d3, d4]
+    with open(outputfile, 'wb') as f:
+        pickle.dump(params, f)
 
-# test_var(NutrientFlux, 'NutrientFlux')
-
-# Save output:
-params = [ConstantParameters, VariableParameters, NumericParameters, SourceDepth, FlowRate, Nsquared, Um, Converged,
-          ReachedSurface, NutrientFlux, FinalWidth, MinVelocityRatio, InitialAngle, FinalAngle, MeanAngle,
-          DownstreamDistance, PumpPower, d1, d2, d3, d4]
-with open(outputfile, 'wb') as f:
-    pickle.dump(params, f)
 
 # -------------------- PLOTS -----------------------------------------
 
+if inputfile is not None:
+    with open(inputfile, 'rb') as f:
+        (ConstantParameters, VariableParameters, NumericParameters, SourceDepth, FlowRate, Nsquared, Um, Converged,
+         ReachedSurface, NutrientFlux, FinalWidth, MinVelocityRatio, InitialAngle, FinalAngle, MeanAngle,
+         DownstreamDistance, PumpPower, d1, d2, d3, d4) = pickle.load(f)
 
 # Figure parameters:
 pagesize = [12, 12]  # [1x2] inches
