@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from testing import test_var
+import json
 
 
 """
@@ -55,8 +56,8 @@ grid cell.
 # Parameters:
 
 # File names:
-# inputfile='LinePlumeModel_ParamSpace_v2.mat' # can be commented
-# outputfile = 'LinePlumeModel_ParamSpace_v2.mat'
+# inputfile='LinePlumeModel_ParamSpace_v2.json' # can be commented
+outputfile = 'LinePlumeModel_ParamSpace_v2.json'
 # figname = 'LinePlumeModel_ParamSpace_v2.png'
 
 # Constant Parameters:
@@ -70,16 +71,16 @@ g = 9.8  # m/s^2
 mu = 1e-3  # Pa*s
 l = 3e2  # m
 nearsurfacedepth = 25  # m
-# ConstantParameters = struct('r0', r0, 'alpha', alpha, 'da', da, 'rho_m', rho_m, 'dp', dp, 'ri', ri, 'g', g, 'mu', mu,
-#                             'l', l, 'nearsurfacedepth', nearsurfacedepth)
+ConstantParameters = {'r0': r0, 'alpha': alpha, 'da': da, 'rho_m': rho_m, 'dp': dp, 'ri': ri, 'g': g, 'mu': mu, 'l': l,
+                      'nearsurfacedepth': nearsurfacedepth}
 
 # Variable parameters:
 umlims = [.1, 1]  # [1x2] m/s
 nsquaredlims = [1e-6, 1e-4]  # [1x2] s^-2
 sourcedepthlims = [150, 400]  # [1x2] m
 flowratelims = [0, .3]  # m^3/s
-# VariableParameters = struct('umlims', umlims, 'nsquaredlims', nsquaredlims, 'sourcedepthlims', sourcedepthlims,
-#                             'flowratelims', flowratelims)
+VariableParameters = {'umlims': umlims, 'nsquaredlims': nsquaredlims, 'sourcedepthlims': sourcedepthlims,
+                      'flowratelims': flowratelims}
 
 # Numeric Parameters:
 ssize = 3000  # integer
@@ -94,36 +95,11 @@ wsterminationfactor = 0  # unitless        THIS IS THE ONLY PARAMETER REMEMBERED
 numsamples_1d = 30  # integer
 d1displayinterval = 1  # integer
 d2displayinterval = 10  # integer
-# NumericParameters = struct('ssize', ssize, 'sfactor', sfactor, 'tolerance', tolerance, 'miniterations', miniterations,
-#                            'maxiterations', maxiterations, 'initialdamping', initialdamping, 'finaldamping',
-#                            finaldamping, 'efoldingcells', efoldingcells, 'wsterminationfactor', wsterminationfactor,
-# 'numsamples_1d', numsamples_1d, 'd1displayinterval', d1displayinterval, 'd2displayinterval', d2displayinterval)
-
-# Figure parameters:
-pagesize = [12, 12]  # [1x2] inches
-resolution = 300  # dpi
-verttextbuffer = .05  # unitless
-titlebuffer = .03  # unitless
-horztextbuffer = .06  # unitless
-horznotextbuffer = .03  # unitless
-ticklength = .02  # unitless
-tickdir = 'out'  # 'in' or 'out'
-depthtick = 50  # m
-flowratetick = .05  # m^3/s
-powerlims = [0, 1200]  # [1x2] kW
-powertick = 200  # kW
-problims = [0, 1]  # [1x2] unitless
-probtick = 0.25  # unitless
-distlims = [0, 200]  # [1x2] m
-disttick = 50  # m
-blims = [0, 100]  # [1x2] unitless
-btick = 25  # unitless
-fluxavglims = [0, 3.5]  # [1x2] 10^3 m^3/s
-fluxavgtick = .5  # 10^3 m^3/s
-fluxvarlims = [0, 3.5]  # [1x2] 10^3 m^3/s
-fluxvartick = .5  # 10^3 m^3/s
-cmap = 'parula'  # valid colormap string
-numcontours = 30  # integer
+NumericParameters = {'ssize': ssize, 'sfactor': sfactor, 'tolerance': tolerance, 'miniterations': miniterations,
+                     'maxiterations': maxiterations, 'initialdamping': initialdamping, 'finaldamping': finaldamping,
+                     'efoldingcells': efoldingcells, 'wsterminationfactor': wsterminationfactor,
+                     'numsamples_1d': numsamples_1d, 'd1displayinterval': d1displayinterval,
+                     'd2displayinterval': d2displayinterval}
 
 """
 Parameter space key:
@@ -452,12 +428,38 @@ for d1 in range(startingd1, numsamples_1d):
 
 
 # Save output:
-# save(outputfile, '*Parameters', 'SourceDepth', 'FlowRate', 'Nsquared', 'Um', 'Converged', 'ReachedSurface',
-#      'NutrientFlux', 'FinalWidth','MinVelocityRatio', 'InitialAngle', 'FinalAngle', 'MeanAngle', 'DownstreamDistance', 'PumpPower', 'd1', 'd2', 'd3', 'd4')
-
-
+params = [ConstantParameters, VariableParameters, NumericParameters, SourceDepth, FlowRate, Nsquared, Um, Converged,
+          ReachedSurface, NutrientFlux, FinalWidth, MinVelocityRatio, InitialAngle, FinalAngle, MeanAngle,
+          DownstreamDistance, PumpPower, d1, d2, d3, d4]
+with open(outputfile, 'w') as f:
+    json.dump(params, f)
 
 # -------------------- PLOTS -----------------------------------------
+# Figure parameters:
+pagesize = [12, 12]  # [1x2] inches
+resolution = 300  # dpi
+verttextbuffer = .05  # unitless
+titlebuffer = .03  # unitless
+horztextbuffer = .06  # unitless
+horznotextbuffer = .03  # unitless
+ticklength = .02  # unitless
+tickdir = 'out'  # 'in' or 'out'
+depthtick = 50  # m
+flowratetick = .05  # m^3/s
+powerlims = [0, 1200]  # [1x2] kW
+powertick = 200  # kW
+problims = [0, 1]  # [1x2] unitless
+probtick = 0.25  # unitless
+distlims = [0, 200]  # [1x2] m
+disttick = 50  # m
+blims = [0, 100]  # [1x2] unitless
+btick = 25  # unitless
+fluxavglims = [0, 3.5]  # [1x2] 10^3 m^3/s
+fluxavgtick = .5  # 10^3 m^3/s
+fluxvarlims = [0, 3.5]  # [1x2] 10^3 m^3/s
+fluxvartick = .5  # 10^3 m^3/s
+cmap = 'parula'  # valid colormap string
+numcontours = 30  # integer
 
 # figure[0]
 #
