@@ -356,7 +356,7 @@ for d1 in range(startingd1, numsamples_1d):
 
                         # Check air fraction:
                         if F_ud[ii + 1] < 0 or F_ud[ii + 1] > 1:
-                            error('Impossible air fraction')
+                            raise Exception('Impossible air fraction')
 
                         # Advance nutrient volume flux:
                         NutrientFlux_ud[ii + 1] = NutrientFlux_ud[ii] + ds * entrainment * NutrientConcentration_a_ud[
