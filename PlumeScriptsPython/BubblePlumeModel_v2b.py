@@ -3,7 +3,7 @@ from scipy.special import erf
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
-from testing import test_var
+from testing import test_var, test_vars
 import pickle
 
 """
@@ -67,7 +67,8 @@ grid cell.
 ## Parameters:
 
 # File names:
-# inputfile=LinePlumeModel_ParamSpace_v3d.mat # can be commented (script is display only if uncommented)
+inputfile = 'LinePlumeModel_ParamSpace_v3i.p'  # can be commented (script is display only if uncommented)
+# inputfile = None
 outputfile = 'LinePlumeModel_ParamSpace_v3i.p'
 # figname = LinePlumeModel_ParamSpace_v3d.png
 
@@ -193,10 +194,11 @@ NutrientConcentration_a = (Rho_a - rho_m) / deltarho
     #     # Recompute central stratification:
     #     centern2 = (g / (rho_m + .5 * deltarho)) * deltarho / (np.sqrt(pi) * transitiondepthscale)
 
-# Communicate:
-print('Looping through parameter space')
+
 # Loop through parameter space:
 for d1 in range(numsamples_1d):
+    if inputfile is not None:
+        break
     for d2 in range(numsamples_1d):
         print('d1: {}, d2: {}'.format(d1, d2))
 
@@ -413,15 +415,35 @@ for d1 in range(numsamples_1d):
             FinalTopDepth[d1, d2] = Depth_ud[ii] - .5 * B_ud[ii] * SinTheta_ud[ii]
             FinalBotDepth[d1, d2] = Depth_ud[ii] + .5 * B_ud[ii] * SinTheta_ud[ii]
 
-test_var(MinVelocityRatio, 'MinVelocityRatio')
+    # test_var(MinVelocityRatio, 'MinVelocityRatio')
 
-# Save output:
-params = [ConstantParameters, VariableParameters, NumericParameters, Rho_a, Depth_a, NutrientConcentration_a,
-          thisgprime_a, thisnutrientconcentration_a, thisrho_a, U_a, SourceDepth, FlowRate, Converged,
-          ReachedSurface, NutrientFlux, FinalWidth, MinVelocityRatio, InitialAngle, FinalAngle, MeanAngle,
-          DownstreamDistance, PumpPower, FinalCenterDepth, FinalTopDepth, FinalBotDepth, d1, d2]
-with open(outputfile, 'wb') as f:
-    pickle.dump(params, f)
+    # Save output:
+    params = [ConstantParameters, VariableParameters, NumericParameters, Rho_a, Depth_a, NutrientConcentration_a,
+              thisgprime_a, thisnutrientconcentration_a, thisrho_a, U_a, SourceDepth, FlowRate, Converged,
+              ReachedSurface, NutrientFlux, FinalWidth, MinVelocityRatio, InitialAngle, FinalAngle, MeanAngle,
+              DownstreamDistance, PumpPower, FinalCenterDepth, FinalTopDepth, FinalBotDepth, d1, d2]
+    with open(outputfile, 'wb') as f:
+        pickle.dump(params, f)
+
+
+if inputfile is not None:
+    with open(inputfile, 'rb') as f:
+        (ConstantParameters, VariableParameters, NumericParameters, Rho_a, Depth_a, NutrientConcentration_a,
+              thisgprime_a, thisnutrientconcentration_a, thisrho_a, U_a, SourceDepth, FlowRate, Converged,
+              ReachedSurface, NutrientFlux, FinalWidth, MinVelocityRatio, InitialAngle, FinalAngle, MeanAngle,
+              DownstreamDistance, PumpPower, FinalCenterDepth, FinalTopDepth, FinalBotDepth, d1, d2) = pickle.load(f)
+
+    params = [Rho_a, Depth_a, NutrientConcentration_a,
+              thisgprime_a, thisnutrientconcentration_a, thisrho_a, U_a, SourceDepth, FlowRate, Converged,
+              ReachedSurface, NutrientFlux, FinalWidth, MinVelocityRatio, InitialAngle, FinalAngle, MeanAngle,
+              DownstreamDistance, PumpPower, FinalCenterDepth, FinalTopDepth, FinalBotDepth]
+
+    params_s = ['Rho_a', 'Depth_a', 'NutrientConcentration_a',
+     'thisgprime_a', 'thisnutrientconcentration_a', 'thisrho_a', 'U_a', 'SourceDepth', 'FlowRate', 'Converged',
+     'ReachedSurface', 'NutrientFlux', 'FinalWidth', 'MinVelocityRatio', 'InitialAngle', 'FinalAngle', 'MeanAngle',
+     'DownstreamDistance', 'PumpPower', 'FinalCenterDepth', 'FinalTopDepth', 'FinalBotDepth']
+
+    test_vars(params, params_s)
 
 # # Figure parameters:
 # pagesize = [12, 15]  # [1x2] inches
