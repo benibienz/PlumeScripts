@@ -338,7 +338,7 @@ patch = Polygon([
 geometry_ax.add_patch(patch)
 
 # Plot plume centerline:
-geometry_ax.plot(X_ud[:ii], Depth_ud[:ii], 'k')
+geometry_ax.plot(X_ud[:ii + 1], Depth_ud[:ii + 1], 'k')
 
 # Plot pycnocline top and 0 line:
 geometry_ax.hlines(dp, *xlims, 'k', '--', linewidth=0.75)

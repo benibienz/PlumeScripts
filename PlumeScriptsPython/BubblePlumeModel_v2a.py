@@ -412,11 +412,11 @@ for d1 in range(startingd1, numsamples_1d):
                     NutrientFlux[d1, d2, d3, d4] = NutrientFlux_ud[ii] * max(0, min(1, (
                                 nearsurfacedepth - (Depth_ud[ii] - .5 * B_ud[ii] * SinTheta_ud[ii])) / (B_ud[ii] * SinTheta_ud[ii])))
                     FinalWidth[d1, d2, d3, d4] = B_ud[ii]
-                    MinVelocityRatio[d1, d2, d3, d4] = min(W_ud[1:ii]/ Ws_ud[1:ii])
+                    MinVelocityRatio[d1, d2, d3, d4] = min(W_ud[1:ii + 1]/ Ws_ud[1:ii + 1])
                     Theta_ud = np.rad2deg(np.arcsin(SinTheta_ud))
                     InitialAngle[d1, d2, d3, d4] = Theta_ud[1]
                     FinalAngle[d1, d2, d3, d4] = Theta_ud[ii]
-                    MeanAngle[d1, d2, d3, d4] = np.mean(Theta_ud[1:ii])
+                    MeanAngle[d1, d2, d3, d4] = np.mean(Theta_ud[1:ii + 1])
                     DownstreamDistance[d1, d2, d3, d4] = X_ud[ii]
 
     # Save output:

@@ -401,24 +401,20 @@ for d1 in range(numsamples_1d):
         # Compute output variables:
         if ii > 1:
             NutrientFlux[d1, d2] = NutrientFlux_ud[ii] * max(0, min(1, (
-                        nearsurfacedepth - (Depth_ud[ii] - .5 * B_ud[ii] * SinTheta_ud[ii])) / (
-                                                                                B_ud[ii] * SinTheta_ud[ii])))  # m^2/s
+                        nearsurfacedepth - (Depth_ud[ii] - .5 * B_ud[ii] * SinTheta_ud[ii])) / (                                                                                B_ud[ii] * SinTheta_ud[ii])))  # m^2/s
             FinalWidth[d1, d2] = B_ud[ii]
-            print(ii)
-            w_ws = W_ud[2:ii] / Ws_ud[2:ii]
-            MinVelocityRatio[d1, d2] = min(W_ud[2:ii] / Ws_ud[2:ii])
-            # print(d1, d2, min(W_ud[2:ii] / Ws_ud[2:ii]))
+            MinVelocityRatio[d1, d2] = min(W_ud[1:ii + 1] / Ws_ud[1:ii + 1])
             Theta_ud = np.rad2deg(np.arcsin(SinTheta_ud))
             InitialAngle[d1, d2] = Theta_ud[1]
             FinalAngle[d1, d2] = Theta_ud[ii]
-            MeanAngle[d1, d2] = np.mean(Theta_ud[1:ii])
+            MeanAngle[d1, d2] = np.mean(Theta_ud[1:ii + 1])
             DownstreamDistance[d1, d2] = X_ud[ii]
             FinalCenterDepth[d1, d2] = Depth_ud[ii]
             FinalTopDepth[d1, d2] = Depth_ud[ii] - .5 * B_ud[ii] * SinTheta_ud[ii]
             FinalBotDepth[d1, d2] = Depth_ud[ii] + .5 * B_ud[ii] * SinTheta_ud[ii]
 
-# test_var(MinVelocityRatio, 'MinVelocityRatio')
-test_var(ii, 'ii')
+test_var(MinVelocityRatio, 'MinVelocityRatio')
+
 # Save output:
 params = [ConstantParameters, VariableParameters, NumericParameters, Rho_a, Depth_a, NutrientConcentration_a,
           thisgprime_a, thisnutrientconcentration_a, thisrho_a, U_a, SourceDepth, FlowRate, Converged,
