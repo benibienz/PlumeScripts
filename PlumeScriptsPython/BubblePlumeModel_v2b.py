@@ -443,53 +443,40 @@ if inputfile is not None:
      'ReachedSurface', 'NutrientFlux', 'FinalWidth', 'MinVelocityRatio', 'InitialAngle', 'FinalAngle', 'MeanAngle',
      'DownstreamDistance', 'PumpPower', 'FinalCenterDepth', 'FinalTopDepth', 'FinalBotDepth']
 
-    test_vars(params, params_s)
+    # test_vars(params, params_s)
 
-# # Figure parameters:
-# pagesize = [12, 15]  # [1x2] inches
-# resolution = 300  # dpi
-# verttextbuffer = .04  # unitless
-# titlebuffer = .03  # unitless
-# horztextbuffer = .06  # unitless
-# horznotextbuffer = .03  # unitless
-# ticklength = .02  # unitless
-# tickdir = out  # in or out
-# depthlims = [0, 400]  # [1x2] m
-# depthtick = 50  # m
-# rholims = [1025, 1026]  # [1x2] kg/m^3
-# rhotick = .25  # kg/m^3
-# ulims = [0, 60]  # [1x2] cm/s
-# utick = 10  # cm/s
-# flowratetick = .1  # m^3/s
-# distlims = [0, 500]  # [1x2] m
-# disttick = 100  # m
-# finaldepthlims = [0, 250]  # [1x2] m
-# finaldepthtick = 50  # m
-# powerlims = [0, 4]  # [1x2] MW
-# powertick = 1  # MW
-# wratiolims = [0, 20]  # [1x2] unitless
-# wratiotick = 5  # unitless
-# fluxavglims = [0, 6]  # [1x2] 10^3 m^3/s
-# fluxavgtick = 1  # 10^3 m^3/s
-# fluxratiolims = [0, 3]  # [1x2] (m^3/s)/kW
-# fluxratiotick = .5  # (m^3/s)/kW
-# cmap = parula  # valid colormap string
-# numcontours = 30  # integer
-# 
-# ## Make Figure:
-# close
-# all
-# # Make figure:
-# figure[0]
-# 
-# # Set colormap:
-# colormap(cmap)
-# 
-# # Call first subplot:
-# subplot(Position, Boxes
-# {1, 1})
-# # Plot density:
-# plot(Rho_a, Depth_a, k)
+# Figure parameters:
+pagesize = [12, 15]  # [1x2] inches
+resolution = 300  # dpi
+verttextbuffer = .04  # unitless
+titlebuffer = .03  # unitless
+horztextbuffer = .06  # unitless
+horznotextbuffer = .03  # unitless
+ticklength = .02  # unitless
+tickdir = out  # in or out
+depthlims = [0, 400]  # [1x2] m
+depthtick = 50  # m
+rholims = [1025, 1026]  # [1x2] kg/m^3
+rhotick = .25  # kg/m^3
+ulims = [0, 60]  # [1x2] cm/s
+utick = 10  # cm/s
+flowratetick = .1  # m^3/s
+distlims = [0, 500]  # [1x2] m
+disttick = 100  # m
+finaldepthlims = [0, 250]  # [1x2] m
+finaldepthtick = 50  # m
+powerlims = [0, 4]  # [1x2] MW
+powertick = 1  # MW
+wratiolims = [0, 20]  # [1x2] unitless
+wratiotick = 5  # unitless
+fluxavglims = [0, 6]  # [1x2] 10^3 m^3/s
+fluxavgtick = 1  # 10^3 m^3/s
+fluxratiolims = [0, 3]  # [1x2] (m^3/s)/kW
+fluxratiotick = .5  # (m^3/s)/kW
+numcontours = 30  # integer
+
+# Plot density:
+plot(Rho_a, Depth_a, k)
 # hold
 # on
 # # Set up stuff:

@@ -56,8 +56,8 @@ grid cell.
 # Parameters:
 
 # File names:
-# inputfile = None
-inputfile = 'LinePlumeModel_ParamSpace_v2.p'  # uncomment for plot only
+inputfile = None
+# inputfile = 'LinePlumeModel_ParamSpace_v2.p'  # uncomment for plot only
 outputfile = 'LinePlumeModel_ParamSpace_v2.p'
 # figname = 'LinePlumeModel_ParamSpace_v2.png'
 
@@ -93,7 +93,7 @@ initialdamping = .95  # unitless [0,1)
 finaldamping = .25  # unitless ]0,1)
 efoldingcells = 3  # unitless
 wsterminationfactor = 0  # unitless        THIS IS THE ONLY PARAMETER REMEMBERED IF YOU ARE LOADING AN INPUT FILE
-numsamples_1d = 2  # integer
+numsamples_1d = 10  # integer
 d1displayinterval = 1  # integer
 d2displayinterval = 10  # integer
 NumericParameters = {'ssize': ssize, 'sfactor': sfactor, 'tolerance': tolerance, 'miniterations': miniterations,
