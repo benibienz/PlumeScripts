@@ -464,152 +464,50 @@ numcontours = 30  # integer
 #
 # # Set colormap:
 # colormap(cmap)
-#
-# Plot pump power:
-contourf(FlowRate, SourceDepth, PumpPower / 1000, linspace(powerlims[0], powerlims[1], numcontours))
-# # Set up stuff:
-# caxis(powerlims)
-# set(gca, 'ydir', 'reverse')
-# ylim(sourcedepthlims)
-# set(gca, 'YTick', depthtick * [ceil(sourcedepthlims[0] / depthtick): 1:floor(sourcedepthlims[1] / depthtick)])
-# ylabel('Source Depth (m)')
-# xlim(flowratelims. * [0, 1.0001])  # KLUDGE
-# set(gca, 'XTick', flowratetick * [ceil(flowratelims[0] / flowratetick): 1:floor(
-#     flowratelims[1] * 1.0001 / flowratetick)])  # KLUDGE
-# set(gca, 'XTickLabel', [])
-# set(gca, 'TickLength', [ticklength, .025])
-# set(gca, 'TickDir', tickdir)
-# # Color bar:
-# hc1 = colorbar
-# set(get(hc1, 'Ylabel'), 'String', 'kW')
-# set(hc1, 'YTick', powertick * [ceil(powerlims[0] / powertick): 1:floor(powerlims[1] / powertick)])
-# # Title:
-# title('a) Pump Power')
-#
-# # Call second subplot:
-# subplot('Position', Boxes
-# {1, 2})
-# # Plot probability of reaching surface:
-# contourf(FlowRate, SourceDepth, mean(mean(ReachedSurface, 4), 3), linspace(problims[0], problims[1], numcontours))
-# # Set up stuff:
-# caxis(problims)
-# set(gca, 'ydir', 'reverse')
-# ylim(sourcedepthlims)
-# set(gca, 'YTick', depthtick * [ceil(sourcedepthlims[0] / depthtick): 1:floor(sourcedepthlims[1] / depthtick)])
-# set(gca, 'YTickLabel', [])
-# xlim(flowratelims. * [0, 1.0001])  # KLUDGE
-# set(gca, 'XTick', flowratetick * [ceil(flowratelims[0] / flowratetick): 1:floor(
-#     flowratelims[1] * 1.0001 / flowratetick)])  # KLUDGE
-# set(gca, 'XTickLabel', [])
-# set(gca, 'TickLength', [ticklength, .025])
-# set(gca, 'TickDir', tickdir)
-# # Color bar:
-# hc2 = colorbar
-# # set(get(hc2,'Ylabel'),'String','probability')
-# set(hc2, 'YTick', probtick * [ceil(problims[0] / probtick): 1:floor(problims[1] / probtick)])
-# # Title:
-# title('b) Probability of Reaching Surface')
-#
-# # Call third subplot:
-# subplot('Position', Boxes
-# {2, 1})
-# # Plot mean downstream distance:
-# contourf(FlowRate, SourceDepth, mean(mean(DownstreamDistance, 4), 3), linspace(distlims[0], distlims[1], numcontours))
-# # Set up stuff:
-# caxis(distlims)
-# set(gca, 'ydir', 'reverse')
-# ylim(sourcedepthlims)
-# set(gca, 'YTick', depthtick * [ceil(sourcedepthlims[0] / depthtick): 1:floor(sourcedepthlims[1] / depthtick)])
-# ylabel('Source Depth (m)')
-# xlim(flowratelims. * [0, 1.0001])  # KLUDGE
-# set(gca, 'XTick', flowratetick * [ceil(flowratelims[0] / flowratetick): 1:floor(
-#     flowratelims[1] * 1.0001 / flowratetick)])  # KLUDGE
-# set(gca, 'XTickLabel', [])
-# set(gca, 'TickLength', [ticklength, .025])
-# set(gca, 'TickDir', tickdir)
-# # Color bar:
-# hc3 = colorbar
-# set(get(hc3, 'Ylabel'), 'String', 'm')
-# set(hc3, 'YTick', disttick * [ceil(distlims[0] / disttick): 1:floor(distlims[1] / disttick)])
-# # Title:
-# title('c) Downstream Distance')
-#
-# # Call fourth subplot:
-# subplot('Position', Boxes
-# {2, 2})
-# # Plot final width:
-# contourf(FlowRate, SourceDepth, mean(mean(FinalWidth, 4), 3), linspace(blims[0], blims[1], numcontours))
-# # Set up stuff:
-# caxis(blims)
-# set(gca, 'ydir', 'reverse')
-# ylim(sourcedepthlims)
-# set(gca, 'YTick', depthtick * [ceil(sourcedepthlims[0] / depthtick): 1:floor(sourcedepthlims[1] / depthtick)])
-# set(gca, 'YTickLabel', [])
-# xlim(flowratelims. * [0, 1.0001])  # KLUDGE
-# set(gca, 'XTick', flowratetick * [ceil(flowratelims[0] / flowratetick): 1:floor(
-#     flowratelims[1] * 1.0001 / flowratetick)])  # KLUDGE
-# set(gca, 'XTickLabel', [])
-# set(gca, 'TickLength', [ticklength, .025])
-# set(gca, 'TickDir', tickdir)
-# # Color bar:
-# hc4 = colorbar
-# set(get(hc4, 'Ylabel'), 'String', 'm')
-# set(hc4, 'YTick', btick * [ceil(blims[0] / btick): 1:floor(blims[1] / btick)])
-# # Title:
-# title('d) Final Plume Width')
-#
-# # Call third subplot:
-# subplot('Position', Boxes
-# {3, 1})
-# # Plot mean nutrient flux to the surface:
-# contourf(FlowRate, SourceDepth, mean(mean(NutrientFlux, 4), 3), linspace(fluxavglims[0], fluxavglims[1], numcontours))
-# # Set up stuff:
-# caxis(fluxavglims)
-# set(gca, 'ydir', 'reverse')
-# ylim(sourcedepthlims)
-# set(gca, 'YTick', depthtick * [ceil(sourcedepthlims[0] / depthtick): 1:floor(sourcedepthlims[1] / depthtick)])
-# ylabel('Source Depth (m)')
-# xlim(flowratelims. * [0, 1.0001])  # KLUDGE
-# set(gca, 'XTick', flowratetick * [ceil(flowratelims[0] / flowratetick): 1:floor(
-#     flowratelims[1] * 1.0001 / flowratetick)])  # KLUDGE
-# xlabel('Air Flow Rate (m**3/s)')
-# set(gca, 'TickLength', [ticklength, .025])
-# set(gca, 'TickDir', tickdir)
-# # Color bar:
-# hc3 = colorbar
-# set(get(hc3, 'Ylabel'), 'String', '10**3 m**3/s')
-# set(hc3, 'YTick', fluxavgtick * [ceil(fluxavglims[0] / fluxavgtick): 1:floor(fluxavglims[1] / fluxavgtick)])
-# # Title:
-# title('e) Expected Nutrient Flux')
-#
-# # Call fourth subplot:
-# subplot('Position', Boxes
-# {3, 2})
-# # Compute variability in nutrient flux:
-# FluxVar = zeros(numsamples_1d, numsamples_1d)
-# for d1=1:numsamples_1d
-# for d2=1:numsamples_1d
-# ThisFlux = NutrientFlux(d1, d2,:,:)
-# FluxVar(d1, d2) = std(ThisFlux(:))
-# end
-# end
-# # Plot variability in nutrient flux:
-# contourf(FlowRate, SourceDepth, FluxVar, linspace(fluxvarlims[0], fluxvarlims[1], numcontours))
-# # Set up stuff:
-# caxis(fluxvarlims)
-# set(gca, 'ydir', 'reverse')
-# ylim(sourcedepthlims)
-# set(gca, 'YTick', depthtick * [ceil(sourcedepthlims[0] / depthtick): 1:floor(sourcedepthlims[1] / depthtick)])
-# set(gca, 'YTickLabel', [])
-# xlim(flowratelims. * [0, 1.0001])  # KLUDGE
-# set(gca, 'XTick', flowratetick * [ceil(flowratelims[0] / flowratetick): 1:floor(
-#     flowratelims[1] * 1.0001 / flowratetick)])  # KLUDGE
-# xlabel('Air Flow Rate (m**3/s)')
-# set(gca, 'TickLength', [ticklength, .025])
-# set(gca, 'TickDir', tickdir)
-# # Color bar:
-# hc4 = colorbar
-# set(get(hc4, 'Ylabel'), 'String', '10**3 m**3/s')
-# set(hc4, 'YTick', fluxvartick * [ceil(fluxvarlims[0] / fluxvartick): 1:floor(fluxvarlims[1] / fluxvartick)])
-# # Title:
-# title('f) Nutrient Flux Variability')
+
+# subplots
+fig, [[power_ax, prob_ax], [dist_ax, width_ax], [expflux_ax, fluxvar_ax]] = plt.subplots(nrows=3, ncols=2, sharex='col',
+                                                                                       sharey='row', figsize=(19, 10))
+X = FlowRate.flatten()
+Y = SourceDepth.flatten()
+
+# Power plot
+power_ax.set_title('a) Pump Power (kW)')
+power_ax.invert_yaxis()
+power_ax.set_ylabel('Source Depth (m)')
+power_c = power_ax.contourf(X, Y, PumpPower / 1000, np.linspace(powerlims[0], powerlims[1], numcontours), extend='max')
+
+fig.colorbar(power_c, ax=power_ax, ticks=np.arange(powerlims[0], powerlims[1] + 0.01, powertick))
+
+# Probability plot
+prob_ax.set_title('b) Probability of Reaching Surface')
+prob_c = prob_ax.contourf(X, Y, np.mean(ReachedSurface, (2, 3)), np.linspace(problims[0], problims[1], numcontours))
+fig.colorbar(prob_c, ax=prob_ax, ticks=np.arange(problims[0], problims[1] + 0.01, probtick))
+
+# Downstream Distance plot
+dist_ax.set_title('c) Downstream Distance (m)')
+dist_ax.invert_yaxis()
+dist_c = dist_ax.contourf(X, Y, np.mean(DownstreamDistance, (2, 3)), np.linspace(distlims[0], distlims[1], numcontours), extend='max')
+fig.colorbar(dist_c, ax=dist_ax, ticks=np.arange(distlims[0], distlims[1] + 0.01, disttick))
+
+# Plume width plot
+width_ax.set_title('d) Final Plume Width (m)')
+width_c = width_ax.contourf(X, Y, np.mean(FinalWidth, (2, 3)), np.linspace(blims[0], blims[1], numcontours), extend='max')
+fig.colorbar(width_c, ax=width_ax, ticks=np.arange(blims[0], blims[1] + 0.01, btick))
+
+# Mean nutrient flux plot
+expflux_ax.set_title('e) Expected Nutrient Flux (m^3/s)')
+expflux_ax.invert_yaxis()
+expflux_ax.set_xlabel('Air Flow Rate (m^3/s)')
+expflux_c = expflux_ax.contourf(X, Y, np.mean(NutrientFlux, (2, 3)), np.linspace(fluxavglims[0], fluxavglims[1], numcontours), extend='max')
+fig.colorbar(expflux_c, ax=expflux_ax, ticks=np.arange(fluxavglims[0], fluxavglims[1] + 0.01, fluxavgtick))
+
+# Compute + plot variability in nutrient flux
+FluxVar = np.std(NutrientFlux, (2, 3), ddof=1)
+fluxvar_ax.set_title('f) Nutrient Flux Variability (m^3/s)')
+fluxvar_ax.set_xlabel('Air Flow Rate (m^3/s)')
+fluxvar_c = fluxvar_ax.contourf(X, Y, FluxVar, np.linspace(fluxvarlims[0], fluxvarlims[1], numcontours), extend='max')
+fig.colorbar(fluxvar_c, ax=fluxvar_ax, ticks=np.arange(fluxvarlims[0], fluxvarlims[1] + 0.01, fluxvartick))
+
+fig.tight_layout()
+plt.show()
