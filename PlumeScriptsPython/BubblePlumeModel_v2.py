@@ -45,7 +45,7 @@ rho_m = 1025  # kg/m^3
 u_m = 0.30  # m/s
 dp = 150  # m
 nsquared = 1e-6  # s^-2
-shear = u_m / 150  # s^-1
+shear = u_m / 150  # s^-1   this 150 should prob be dp
 gamma = 1 / 150  # m^-1
 g = 9.8  # m/s^2
 mu = 1e-3  # Pa*s
@@ -63,7 +63,6 @@ maxiterations = 300  # integer
 initialdamping = .95  # unitless [0,1)
 finaldamping = .25  # unitless ]0,1)
 efoldingcells = 3  # unitless
-
 
 # Compute richardson number: (Ri=N^2/shear^2)
 ri = nsquared / (shear ** 2)
