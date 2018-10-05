@@ -453,7 +453,6 @@ titlebuffer = .03  # unitless
 horztextbuffer = .06  # unitless
 horznotextbuffer = .03  # unitless
 ticklength = .02  # unitless
-tickdir = out  # in or out
 depthlims = [0, 400]  # [1x2] m
 depthtick = 50  # m
 rholims = [1025, 1026]  # [1x2] kg/m^3
@@ -475,53 +474,29 @@ fluxratiolims = [0, 3]  # [1x2] (m^3/s)/kW
 fluxratiotick = .5  # (m^3/s)/kW
 numcontours = 30  # integer
 
+fig = plt.figure(figsize=(19, 10))
 # Plot density:
-plot(Rho_a, Depth_a, k)
-# hold
-# on
-# # Set up stuff:
-# set(gca, ydir, reverse)
-# ylim(depthlims)
-# set(gca, YTick, depthtick * [ceil(depthlims[0] / depthtick): 1:floor(depthlims(2) / depthtick)])
-# ylabel(Depth (m))
-# xlim(rholims)
-# set(gca, XTick, rhotick * [ceil(rholims[0] / rhotick): 1:floor(rholims(2) / rhotick)])
-# xlabel(Density (kg/m^3))
-# set(gca, TickLength, [ticklength, .025])
-# set(gca, TickDir, tickdir)
-# # Label N^2:
-# plot(rho_m + .5 * deltarho, middepth, Marker, d, Color, k, MarkerFaceColor, k, LineStyle, none)
-# lowpow10 = 10 ^ floor(log10(centern2))
-# text(rho_m + .5 * deltarho, middepth,
-#      [N^2=, num2str((lowpow10 / 100) * round(100 * centern2 / lowpow10)),  s^{-2}], HorizontalAlignment,
-#      left, VerticalAlignment, bottom, Color, k)
-# # Title:
-# title(a) Ambient Density)
-# 
-# # Call second subplot:
-# subplot(Position, Boxes
-# {1, 2})
-# # Plot density:
-# plot(100 * U_a, Depth_a, k)
-# hold
-# on
-# # Set up stuff:
-# set(gca, ydir, reverse)
-# ylim(depthlims)
-# set(gca, YTick, depthtick * [ceil(depthlims[0] / depthtick): 1:floor(depthlims(2) / depthtick)])
-# ylabel(Depth (m))
-# xlim(ulims)
-# set(gca, XTick, utick * [ceil(ulims[0] / utick): 1:floor(ulims(2) / utick)])
-# xlabel(Velocity (cm/s))
-# set(gca, TickLength, [ticklength, .025])
-# set(gca, TickDir, tickdir)
-# # Label Richardson number:
-# plot(100 * .5 * u_m, middepth, Marker, d, Color, k, MarkerFaceColor, k, LineStyle, none)
-# text(100 * .5 * u_m, middepth, [R_i=, num2str(ri)], HorizontalAlignment, right, VerticalAlignment,
-#      bottom, Color, k)
-# # Title:
-# title(b) Ambient Horizontal Current)
-# 
+ax0 = plt.subplot(421)
+ax0.set_title('a) Ambient Density)')
+ax0.invert_yaxis()
+ax0.set_ylabel('Source Depth (m)')
+ax0.set_xlabel('Denisty (kg/m^3)')
+ax0.plot(Rho_a, Depth_a, 'k')
+# Label N^2:
+ax0.plot(rho_m + .5 * deltarho, middepth, 'k', marker='D', markersize=5)
+lowpow10 = 10 ** np.log10(centern2)
+ax0.text(rho_m + .5 * deltarho, middepth - 10, 'N^2 = {:.2e}s^-2'.format(lowpow10), verticalalignment='bottom', horizontalalignment='left')
+
+# Plot current
+ax1 = plt.subplot(422, sharey=ax0)
+ax1.set_title('b) Ambient Horizontal Current')
+ax1.set_xlabel('Velocity (cm/s)')
+ax1.plot(100 * U_a, Depth_a, 'k')
+# Label Richardson number:
+ax1.plot(100 * .5 * u_m, middepth, 'k', marker='D', markersize=5)
+ax1.text(100 * .5 * u_m, middepth - 10, 'Ri = {}'.format(ri), verticalalignment='bottom', horizontalalignment='left'),
+
+
 # # Call third subplot:
 # subplot(Position, Boxes
 # {2, 1})
@@ -712,8 +687,8 @@ plot(Rho_a, Depth_a, k)
 #     fluxratiolims(2) / fluxratiotick)])
 # # Title:
 # title(h) Ratio of Nutrient Flux to Pump Power)
-# 
-# # Export figure:
-# set(gcf, PaperSize, pagesize)
-# set(gcf, PaperPosition, [0, 0, pagesize])
-# print(-dpng, figname, [-r, num2str(resolution)])
+
+fig.tight_layout()
+plt.show()
+
+

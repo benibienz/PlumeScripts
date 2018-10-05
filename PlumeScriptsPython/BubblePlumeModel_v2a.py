@@ -461,10 +461,6 @@ fluxvartick = .5  # 10^3 m^3/s
 cmap = 'parula'  # valid colormap string
 numcontours = 30  # integer
 
-#
-# # Set colormap:
-# colormap(cmap)
-
 # subplots
 fig, [[power_ax, prob_ax], [dist_ax, width_ax], [expflux_ax, fluxvar_ax]] = plt.subplots(nrows=3, ncols=2, sharex='col',
                                                                                        sharey='row', figsize=(19, 10))
