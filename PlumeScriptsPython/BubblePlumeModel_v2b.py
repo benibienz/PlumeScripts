@@ -106,7 +106,7 @@ initialdamping = .75  # unitless [0,1)
 finaldamping = .25  # unitless ]0,1)
 efoldingcells = 3  # unitless
 wsterminationfactor = 0  # unitless        THIS IS THE ONLY PARAMETER REMEMBERED IF YOU ARE LOADING AN INPUT FILE
-numsamples_1d = 2  # integer
+numsamples_1d = 3  # integer
 interpstyle = 'linear'  # valid interp1d method
 d1displayinterval = 1  # integer
 NumericParameters = {'ssize': ssize, 'sfactor': sfactor, 'asize': asize, 'tolerance': tolerance,
@@ -479,7 +479,7 @@ fig = plt.figure(figsize=(19, 10))
 ax0 = plt.subplot(421)
 ax0.set_title('a) Ambient Density)')
 ax0.invert_yaxis()
-ax0.set_ylabel('Source Depth (m)')
+ax0.set_ylabel('Depth (m)')
 ax0.set_xlabel('Denisty (kg/m^3)')
 ax0.plot(Rho_a, Depth_a, 'k')
 # Label N^2:
@@ -496,133 +496,63 @@ ax1.plot(100 * U_a, Depth_a, 'k')
 ax1.plot(100 * .5 * u_m, middepth, 'k', marker='D', markersize=5)
 ax1.text(100 * .5 * u_m, middepth - 10, 'Ri = {}'.format(ri), verticalalignment='bottom', horizontalalignment='left'),
 
+# Plot paramteric studies
+X = FlowRate.flatten()
+Y = SourceDepth.flatten()
 
-# # Call third subplot:
-# subplot(Position, Boxes
-# {2, 1})
-# # Plot mean downstream distance:
-# contourf(FlowRate, SourceDepth, DownstreamDistance, np.linspace(distlims[0], distlims(2), numcontours))
-# hold
-# on
-# # Plot reached surface boundary:
-# contour(FlowRate, SourceDepth, ReachedSurface & FinalCenterDepth < middepth, [.5, .5], Color, w,
-#         LineWidth, 1)
-# # Plot mid depth:
-# plot(flowratelims, middepth * [1, 1], Color, w, LineStyle, --, LineWidth, 1)
-# # Set up stuff:
-# caxis(distlims)
-# set(gca, ydir, reverse)
-# ylim(sourcedepthlims)
-# set(gca, YTick, depthtick * [ceil(sourcedepthlims[0] / depthtick): 1:floor(sourcedepthlims(2) / depthtick)])
-# ylabel(Source Depth (m))
-# xlim(flowratelims. * [0, 1.0001])  # KLUDGE
-# set(gca, XTick, flowratetick * [ceil(flowratelims[0] / flowratetick): 1:floor(
-#     flowratelims(2) * 1.0001 / flowratetick)])  # KLUDGE
-# set(gca, XTickLabel, [])
-# set(gca, TickLength, [ticklength, .025])
-# set(gca, TickDir, tickdir)
-# # Color bar:
-# hc1 = colorbar
-# set(get(hc1, Ylabel), String, m)
-# set(hc1, YTick, disttick * [ceil(distlims[0] / disttick): 1:floor(distlims(2) / disttick)])
-# # Title:
-# title(c) Downstream Distance)
-# 
-# # Call fourth subplot:
-# subplot(Position, Boxes
-# {2, 2})
-# # Plot termination depth:
-# contourf(FlowRate, SourceDepth, FinalCenterDepth,
-#          np.linspace(finaldepthlims[0], finaldepthlims(2), numcontours))
-# hold
-# on
-# # Plot reached surface boundary:
-# contour(FlowRate, SourceDepth, ReachedSurface & FinalCenterDepth < middepth, [.5, .5], Color, w,
-#         LineWidth, 1)
-# # Plot mid depth:
-# plot(flowratelims, middepth * [1, 1], Color, w, LineStyle, --, LineWidth, 1)
-# # Set up stuff:
-# caxis(finaldepthlims)
-# set(gca, ydir, reverse)
-# ylim(sourcedepthlims)
-# set(gca, YTick, depthtick * [ceil(sourcedepthlims[0] / depthtick): 1:floor(sourcedepthlims(2) / depthtick)])
-# set(gca, YTickLabel, [])
-# xlim(flowratelims. * [0, 1.0001])  # KLUDGE
-# set(gca, XTick, flowratetick * [ceil(flowratelims[0] / flowratetick): 1:floor(
-#     flowratelims(2) * 1.0001 / flowratetick)])  # KLUDGE
-# set(gca, XTickLabel, [])
-# set(gca, TickLength, [ticklength, .025])
-# set(gca, TickDir, tickdir)
-# # Color bar:
-# hc2 = colorbar
-# set(get(hc2, Ylabel), String, m)
-# set(hc2, YTick, finaldepthtick * [ceil(finaldepthlims[0] / finaldepthtick): 1:floor(
-#     finaldepthlims(2) / finaldepthtick)])
-# # Title:
-# title(d) Termination Depth (plume center))
-# 
-# # Call fifth subplot:
-# subplot(Position, Boxes
-# {3, 1})
-# # Plot w/ws ratio:
-# contourf(FlowRate, SourceDepth, MinVelocityRatio, np.linspace(wratiolims[0], wratiolims(2), numcontours))
-# hold
-# on
-# # Plot reached surface boundary:
-# contour(FlowRate, SourceDepth, ReachedSurface & FinalCenterDepth < middepth, [.5, .5], Color, w,
-#         LineWidth, 1)
-# # Plot mid depth:
-# plot(flowratelims, middepth * [1, 1], Color, w, LineStyle, --, LineWidth, 1)
-# # Set up stuff:
-# caxis(wratiolims)
-# set(gca, ydir, reverse)
-# ylim(sourcedepthlims)
-# set(gca, YTick, depthtick * [ceil(sourcedepthlims[0] / depthtick): 1:floor(sourcedepthlims(2) / depthtick)])
-# ylabel(Source Depth (m))
-# xlim(flowratelims. * [0, 1.0001])  # KLUDGE
-# set(gca, XTick, flowratetick * [ceil(flowratelims[0] / flowratetick): 1:floor(
-#     flowratelims(2) * 1.0001 / flowratetick)])  # KLUDGE
-# set(gca, XTickLabel, [])
-# set(gca, TickLength, [ticklength, .025])
-# set(gca, TickDir, tickdir)
-# # Color bar:
-# hc4 = colorbar
-# set(get(hc4, Ylabel), String, unitless)
-# set(hc4, YTick, wratiotick * [ceil(wratiolims[0] / wratiotick): 1:floor(wratiolims(2) / wratiotick)])
-# # Title:
-# title(e) Minimum w/w_s Ratio)
-# 
-# # Call sixth subplot:
-# subplot(Position, Boxes
-# {3, 2})
-# # Plot pump power:
-# contourf(FlowRate, SourceDepth, PumpPower / 1e6, np.linspace(powerlims[0], powerlims(2), numcontours))
-# hold
-# on
-# # Plot reached surface boundary:
-# contour(FlowRate, SourceDepth, ReachedSurface & FinalCenterDepth < middepth, [.5, .5], Color, w,
-#         LineWidth, 1)
-# # Plot mid depth:
-# plot(flowratelims, middepth * [1, 1], Color, w, LineStyle, --, LineWidth, 1)
-# # Set up stuff:
-# caxis(powerlims)
-# set(gca, ydir, reverse)
-# ylim(sourcedepthlims)
-# set(gca, YTick, depthtick * [ceil(sourcedepthlims[0] / depthtick): 1:floor(sourcedepthlims(2) / depthtick)])
-# set(gca, YTickLabel, [])
-# xlim(flowratelims. * [0, 1.0001])  # KLUDGE
-# set(gca, XTick, flowratetick * [ceil(flowratelims[0] / flowratetick): 1:floor(
-#     flowratelims(2) * 1.0001 / flowratetick)])  # KLUDGE
-# set(gca, XTickLabel, [])
-# set(gca, TickLength, [ticklength, .025])
-# set(gca, TickDir, tickdir)
-# # Color bar:
-# hc3 = colorbar
-# set(get(hc3, Ylabel), String, MW)
-# set(hc3, YTick, powertick * [ceil(powerlims[0] / powertick): 1:floor(powerlims(2) / powertick)])
-# # Title:
-# title(f) Pump Power)
-# 
+# Plot bottom 2 subplots first to satisfy sharex argument
+ax6 = plt.subplot(427)
+ax6.set_title('g) Nutrient Flux to the Surface (10^3 m^3/s)')
+ax6.set_ylabel('Source Depth (m)')
+ax6.set_xlabel('Air Flow Rate (m^3/s)')
+ax6.invert_yaxis()
+ax6_c = ax6.contourf(X, Y, l * NutrientFlux / 1000, np.linspace(fluxavglims[0], fluxavglims[1], numcontours), extend='max')
+fig.colorbar(ax6_c, ax=ax6, ticks=np.arange(fluxavglims[0], fluxavglims[1] + 0.01, fluxavgtick))
+ax6.contour(X, Y, ReachedSurface & (FinalCenterDepth < middepth), [0.5], colors='w')  # reached surface boundary
+ax6.hlines(middepth, *flowratelims, 'w', '--')  # mid depth
+
+ax7 = plt.subplot(428, sharey=ax6)
+ax7.set_title('h) Ratio of Nutrient Flux to Pump Power ((m^3/s) / kW)')
+ax7.set_xlabel('Air Flow Rate (m^3/s)')
+ax7_c = ax7.contourf(X, Y, 1000 * l * NutrientFlux / PumpPower, np.linspace(fluxratiolims[0], fluxratiolims[1], numcontours), extend='max')
+fig.colorbar(ax7_c, ax=ax7, ticks=np.arange(fluxratiolims[0], fluxratiolims[1] + 0.01, fluxratiotick))
+ax7.contour(X, Y, ReachedSurface & (FinalCenterDepth < middepth), [0.5], colors='w')  # reached surface boundary
+ax7.hlines(middepth, *flowratelims, 'w', '--')  # mid depth
+
+# Plot rest of subplots in order
+ax2 = plt.subplot(423, sharex=ax6)
+ax2.set_title('c) Downstream Distance (m)')
+ax2.set_ylabel('Source Depth (m)')
+ax2.invert_yaxis()
+ax2_c = ax2.contourf(X, Y, DownstreamDistance, np.linspace(distlims[0], distlims[1], numcontours), extend='max')
+fig.colorbar(ax2_c, ax=ax2, ticks=np.arange(distlims[0], distlims[1] + 0.01, disttick))
+ax2.contour(X, Y, ReachedSurface & (FinalCenterDepth < middepth), [0.5], colors='w')  # reached surface boundary
+ax2.hlines(middepth, *flowratelims, 'w', '--')  # mid depth
+
+ax3 = plt.subplot(424, sharey=ax2, sharex=ax7)
+ax3.set_title('d) Termination Depth (Plume Center) (m)')
+ax3_c = ax3.contourf(X, Y, FinalCenterDepth, np.linspace(finaldepthlims[0], finaldepthlims[1], numcontours), extend='max')
+fig.colorbar(ax3_c, ax=ax3, ticks=np.arange(finaldepthlims[0], finaldepthlims[1] + 0.01, finaldepthtick))
+ax3.contour(X, Y, ReachedSurface & (FinalCenterDepth < middepth), [0.5], colors='w')  # reached surface boundary
+ax3.hlines(middepth, *flowratelims, 'w', '--')  # mid depth
+
+ax4 = plt.subplot(425, sharex=ax6)
+ax4.set_title('e) Minimum w/w_s Ratio')
+ax4.set_ylabel('Source Depth (m)')
+ax4.invert_yaxis()
+ax4_c = ax4.contourf(X, Y, MinVelocityRatio, np.linspace(wratiolims[0], wratiolims[1], numcontours), extend='max')
+fig.colorbar(ax4_c, ax=ax4, ticks=np.arange(wratiolims[0], wratiolims[1] + 0.01, wratiotick))
+ax4.contour(X, Y, ReachedSurface & (FinalCenterDepth < middepth), [0.5], colors='w')  # reached surface boundary
+ax4.hlines(middepth, *flowratelims, 'w', '--')  # mid depth
+
+ax5 = plt.subplot(426, sharey=ax4, sharex=ax7)
+ax5.set_title('f) Pump Power (kW)')
+ax5_c = ax5.contourf(X, Y, PumpPower / 1e6, np.linspace(powerlims[0], powerlims[1], numcontours), extend='max')
+fig.colorbar(ax5_c, ax=ax5, ticks=np.arange(powerlims[0], powerlims[1] + 0.01, powertick))
+ax5.contour(X, Y, ReachedSurface & (FinalCenterDepth < middepth), [0.5], colors='w')  # reached surface boundary
+ax5.hlines(middepth, *flowratelims, 'w', '--')  # mid depth
+
+
 # # Call seventh subplot:
 # subplot(Position, Boxes
 # {4, 1})
