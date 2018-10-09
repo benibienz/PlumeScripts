@@ -42,10 +42,10 @@ r0 = 1e-4  # m
 alpha = .083  # unitless
 da = 10  # m
 rho_m = 1025  # kg/m^3
-u_m = 0.30  # m/s
+u_m = 0.50  # m/s
 dp = 150  # m
 nsquared = 1e-6  # s^-2
-shear = u_m / 150  # s^-1   this 150 should prob be dp
+shear = u_m / 250  # s^-1   this 150 should prob be dp
 gamma = 1 / 150  # m^-1
 g = 9.8  # m/s^2
 mu = 1e-3  # Pa*s
@@ -389,8 +389,8 @@ AggregateBuoyancy_ud = F_ud + (1 - F_ud) * Gprime_ud / g - Gprime_a_ud / g
 
 # Check if there is negative buoyancy:
 if min(AggregateBuoyancy_ud) < 0:
-    buoyancy_ax.plot(S_ud[:lastplumeind], max(0, AggregateBuoyancy_ud[:lastplumeind]), 'r', label='Positive Buoyancy')
-    buoyancy_ax.plot(S_ud[:lastplumeind], -min(0, AggregateBuoyancy_ud[:lastplumeind]), 'b', label='Negative Buoyancy')
+    buoyancy_ax.plot(S_ud[:lastplumeind], np.ma.masked_less(AggregateBuoyancy_ud[:lastplumeind], 0), 'r', label='Positive Buoyancy')
+    buoyancy_ax.plot(S_ud[:lastplumeind], -np.ma.masked_greater(AggregateBuoyancy_ud[:lastplumeind], 0), 'b', label='Negative Buoyancy')
     buoyancy_ax.legend()
 else:
     hasnegativebuoyancy = 0  # Remember
