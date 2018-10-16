@@ -45,8 +45,8 @@ rho_m = 1025  # kg/m^3
 u_m = 0.50  # m/s
 dp = 150  # m
 nsquared = 1e-6  # s^-2
-shear = u_m / 250  # s^-1   this 150 should prob be dp
-gamma = 1 / 150  # m^-1
+shear = u_m / 250  # s^-1   150 = dp?
+gamma = 1 / 150  # m^-1    1 at source depth, 0 at shear boundary
 g = 9.8  # m/s^2
 mu = 1e-3  # Pa*s
 l = 3e2  # m

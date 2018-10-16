@@ -21,6 +21,7 @@ uppervelocity = 0.45
 lowervelocity = 0.1
 endmass = 200
 stratdepth = np.arange(25, 175, 25)
+stratdepth = np.array([150])
 pipelength = 200
 g = 9.8
 centralvalue = 100
@@ -31,8 +32,6 @@ damping = 0.85
 
 # Aesthetic Settings:
 figname = 'HangingPipeProblem_stratdepth_v1.png'
-pagesize = (8, 7)
-resolution = 300
 
 # Results
 results = []
@@ -62,18 +61,14 @@ for d1 in range(numsamples):
     Depth_lr = np.cumsum(np.hstack(([0], dx * SinTheta_c)))
 
 
-    # Optional figure - ignore for now
-    # figure(1)
-    # hold off
-    # plot(Distance_lr,-Depth_lr,'k')
-    # hold on
-    # xlim([0,pipelength])
-    # ylim([-pipelength,0])
-    # xlabel('Distance (m)')
-    # ylabel('Depth (m)')
-    # title('Iteration=0')
-    # drawnow
-    # pause(1)
+    # Optional figure
+    # plt.plot(Distance_lr,-Depth_lr,'k')
+    # plt.xlim([0,pipelength])
+    # plt.ylim([-pipelength,0])
+    # plt.xlabel('Distance (m)')
+    # plt.ylabel('Depth (m)')
+    # plt.title('Iteration=0')
+    # plt.show()
 
     # Iterate for convergence:
     done = 0
