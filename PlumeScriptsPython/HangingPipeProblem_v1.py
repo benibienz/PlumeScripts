@@ -32,6 +32,7 @@ damping = 0.85
 
 # Aesthetic Settings:
 figname = 'HangingPipeProblem_stratdepth_v1.png'
+plotiters = False
 
 # Results
 results = []
@@ -122,12 +123,13 @@ for d1 in range(numsamples):
         Depth_lr = np.cumsum(np.hstack(([0], dx * SinTheta_c)))
 
         # Optional Figure
-        colorvar = (min(1, iteration / 10), 0., 0.)
-        plt.plot(Distance_lr, -Depth_lr, color=colorvar)
-        plt.xlabel('Distance (m)')
-        plt.ylabel('Depth (m)')
-        plt.title('Iteration = ' + str(iteration))
-        # plt.show()
+        if plotiters:
+            colorvar = (min(1, iteration / 10), 0., 0.)
+            plt.plot(Distance_lr, -Depth_lr, color=colorvar)
+            plt.xlabel('Distance (m)')
+            plt.ylabel('Depth (m)')
+            # plt.title('Iteration = ' + str(iteration))
+            # plt.show()
 
         # Break from loop:
         if misfit < tolerance:
@@ -141,9 +143,16 @@ for d1 in range(numsamples):
             Theta_c_last = np.copy(Theta_c)
 # ------------------------------------------------------
 
+# plt.plot(Tension_lr)
+# print(Tension_lr)
+# plt.show()
+# raise
+
+
 # Make a figure:
 for res in results:
     c = 'r' if res['d1'] == centralind else 'k'
+    c = 'g'
     plt.plot(res['Distance_lr'], -res['Depth_lr'], c)
     plt.hlines(-stratdepth[res['d1']], 0, pipelength, c, '--')
     plt.text(res['Distance_lr'][-1], -res['Depth_lr'][-1] - 2, str(stratdepth[res['d1']]), verticalalignment='top',
