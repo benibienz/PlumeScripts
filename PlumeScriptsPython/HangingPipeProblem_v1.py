@@ -122,13 +122,12 @@ for d1 in range(numsamples):
         Depth_lr = np.cumsum(np.hstack(([0], dx * SinTheta_c)))
 
         # Optional Figure
-        #     figure(1)
-        #     plot(Distance_lr,-Depth_lr,'r')
-        #     xlabel('Distance (m)')
-        #     ylabel('Depth (m)')
-        #     title(['Iteration=',num2str(iteration)])
-        #     drawnow
-        #     pause(1)
+        colorvar = (min(1, iteration / 10), 0., 0.)
+        plt.plot(Distance_lr, -Depth_lr, color=colorvar)
+        plt.xlabel('Distance (m)')
+        plt.ylabel('Depth (m)')
+        plt.title('Iteration = ' + str(iteration))
+        # plt.show()
 
         # Break from loop:
         if misfit < tolerance:
