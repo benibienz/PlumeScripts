@@ -1,6 +1,6 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy.io import loadmat
+
+""" No plot version for Rescale """
 
 """
 Beni Bienz 9/2018
@@ -21,7 +21,6 @@ uppervelocity = 0.45
 lowervelocity = 0.1
 endmass = 200
 stratdepth = np.arange(25, 175, 25)
-# stratdepth = np.array([150])
 pipelength = 200
 g = 9.8
 centralvalue = 100
@@ -60,16 +59,6 @@ for d1 in range(numsamples):
     CosTheta_c = np.cos(Theta_c)
     Distance_lr = np.cumsum(np.hstack(([0], dx * CosTheta_c)))
     Depth_lr = np.cumsum(np.hstack(([0], dx * SinTheta_c)))
-
-
-    # Optional figure
-    # plt.plot(Distance_lr,-Depth_lr,'k')
-    # plt.xlim([0,pipelength])
-    # plt.ylim([-pipelength,0])
-    # plt.xlabel('Distance (m)')
-    # plt.ylabel('Depth (m)')
-    # plt.title('Iteration=0')
-    # plt.show()
 
     # Iterate for convergence:
     done = 0
@@ -122,15 +111,6 @@ for d1 in range(numsamples):
         Distance_lr = np.cumsum(np.hstack(([0], dx * CosTheta_c)))
         Depth_lr = np.cumsum(np.hstack(([0], dx * SinTheta_c)))
 
-        # Optional Figure
-        if plotiters:
-            colorvar = (min(1, iteration / 10), 0., 0.)
-            plt.plot(Distance_lr, -Depth_lr, color=colorvar)
-            plt.xlabel('Distance (m)')
-            plt.ylabel('Depth (m)')
-            # plt.title('Iteration = ' + str(iteration))
-            # plt.show()
-
         # Break from loop:
         if misfit < tolerance:
             done = 1
@@ -141,28 +121,3 @@ for d1 in range(numsamples):
         else:
             iteration += 1
             Theta_c_last = np.copy(Theta_c)
-# ------------------------------------------------------
-
-# plt.plot(Tension_lr)
-# print(Tension_lr)
-# plt.show()
-# raise
-
-
-# Make a figure:
-for res in results:
-    c = 'r' if res['d1'] == centralind else 'k'
-    # c = 'g'
-    plt.plot(res['Distance_lr'], -res['Depth_lr'], c)
-    plt.hlines(-stratdepth[res['d1']], 0, pipelength, c, '--')
-    plt.text(res['Distance_lr'][-1], -res['Depth_lr'][-1] - 2, str(stratdepth[res['d1']]), verticalalignment='top',
-             horizontalalignment='center')
-
-plt.hlines(0, 0, pipelength, 'b')
-plt.xlabel('Distance (m)')
-plt.ylabel('Depth (m)')
-plt.show()
-
-
-# test_var = test_vars['Depth_lr'][0]
-# np.testing.assert_array_almost_equal(test_var, Depth_lr, decimal=1)
